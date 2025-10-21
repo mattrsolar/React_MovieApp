@@ -21,12 +21,13 @@ function Home() {
     <div className="home">
         <form className="search-form" onSubmit={handleSearchMovie}>
             <input className="searchInput" type="text" placeholder="Search for movies..." 
+            value={searchMovieInput}
             onChange={(e) => setSearchMovieInput(e.target.value)}/>
             <button type="submit" className="search-btn">Search</button>
         </form>
         <div className="movies-grid">
             {movies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
+                movie.title.toLowerCase().includes(searchMovieInput.toLowerCase()) && <MovieCard key={movie.id} movie={movie} />
             ))}
         </div>
     </div>

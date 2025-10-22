@@ -1,14 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import MovieCard from "../components/MovieCard";
+import { getAllMovies } from "../services/MoviesApi";
 
-function Home() {
-    const movies = [
-        { id: 1, title: "Inception", release_date: "2010-07-16" },
-        { id: 2, title: "The Dark Knight", release_date: "2008-07-18" },
-        { id: 3, title: "Interstellar", release_date: "2014-11-07" }
-    ];
-
+function Home() {    
+    const [movies, setMovies] = useState([]);
     const [searchMovieInput, setSearchMovieInput] = useState("");
 
     function handleSearchMovie(e) {
@@ -16,6 +12,19 @@ function Home() {
         alert(searchMovieInput);
     }
 
+    useEffect(() => {
+        const fetchMovies = async () => {
+            try {
+                const moviesData = await getAllMovies();
+                setMovies(moviesData);
+            } catch (error) {
+                console.error("Error fetching movies:", error);
+            }finally{
+                console.log("Finished fetching movies");
+            }
+        };
+        fetchMovies();
+    }, []);
 
   return (
     <div className="home">
@@ -27,7 +36,8 @@ function Home() {
         </form>
         <div className="movies-grid">
             {movies.map((movie) => (
-                movie.title.toLowerCase().includes(searchMovieInput.toLowerCase()) && <MovieCard key={movie.id} movie={movie} />
+                movie.title.toLowerCase().includes(searchMovieInput.toLowerCase()) && 
+                    <MovieCard key={movie.id} movie={movie} />
             ))}
         </div>
     </div>
